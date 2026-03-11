@@ -14,7 +14,11 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
+    - name: Clone git repository
+      uses: actions/checkout@v4
+
+    - name: Setup pnpm and Install
+      uses: seepine/action-setup-pnpm@v1
 
     - name: Set up Node.js
       uses: actions/setup-node@v4
@@ -22,11 +26,9 @@ jobs:
         cache: 'pnpm'
 
 
-    - name: Setup pnpm and Install
-      uses: seepine/action-setup-pnpm@v1
         
     - name: pnpm install, build
       run: |
-        pnpm install
+        pnpm install --frozen-lockfile
         pnpm run build
         
