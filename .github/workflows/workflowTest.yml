@@ -1,34 +1,21 @@
+name: github action workflow to build an app and push image to docker hub
 on:
   push:
     branches: [ "master" ]
     
-env:
-  AZURE_WEBAPP_NAME: your-app-name    # set this to your application's name
-  AZURE_WEBAPP_PACKAGE_PATH: '.'      # set this to the path to your web app project, defaults to the repository root
-  NODE_VERSION: '20.x'                # set this to the node version to use
-
-permissions:
-  contents: read
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - name: Clone git repository
+    - name: clone git repository
       uses: actions/checkout@v4
 
-    - name: Setup pnpm and Install
-      uses: seepine/action-setup-pnpm@v1
+    - name: build image
+      run: docker build . -t ${{ secrets.DOCKERHUB_USER }}/github-action-test:latest
 
-    - name: Set up Node.js
-      uses: actions/setup-node@v4
-      with:
-        cache: 'pnpm'
-
-
-        
-    - name: pnpm install, build
+    - name: push image to docker hub
       run: |
-        pnpm install --frozen-lockfile
-        pnpm run build
+        docker login -u ${{ secrets.DOCKERHUB_USER }} -p ${{ secrets.DOCKERHUB_TOKEN }}
+        docker push ${{ secrets.DOCKERHUB_USER }}/github-action-test:latest
         
