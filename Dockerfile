@@ -1,6 +1,6 @@
 FROM node:24-alpine AS base
 
-apk add --no-cache curl
+RUN apk add --no-cache curl
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
 RUN corepack enable
